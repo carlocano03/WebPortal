@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Generate Loan Transactions - UP Provident Fund Inc.</title>
+    {{ stylesheet_link('//cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.css') }}
+    {{ stylesheet_link('dist/style.css') }}
+  </head>
+  <body>
+    <div class="mp-transpdf-container">
+      <div class="mp-transpdf-header">
+        <div class="mp-transpdf-header__logo">
+          <img src="/assets/images/uppfi-logo-sm.png" alt="UPPFI">
+          <span class="mp-transpdf-header__logo__title">
+            University of the Philippines Provident Fund Inc.
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="mp-transpdf-body">
+
+      <div class="mp-transpdf-body-date">
+        Transaction Period: {{ dateRetrieved }}
+      </div>
+
+      <div class="mp-transpdf-body-memberInfo">
+        <div>
+          Name: {{ firstName ~ ' ' ~ lastName }}
+        </div>
+        <div>
+          Member ID: {{ memberId }}
+        </div>
+        <div>
+          Loan Detail: {{ account }} ({{ approvalDate }})
+        </div>
+      </div>
+
+      <div class="mp-transpdf-body-trans">
+        <div class="mp-transpdf-body-trans-header">
+          Active Loan's Transactions History
+        </div>
+        <table class="mp-transpdf-body-trans-table">
+          <tr>
+            <th class="mp-transpdf-body-trans-table-header mp-transpdf-body-trans-table-centeredHeader">Date</th>
+            <th class="mp-transpdf-body-trans-table-header">Transaction</th>
+            <th class="mp-transpdf-body-trans-table-header mp-transpdf-body-trans-table-centeredHeader">Account</th>
+            <th class="mp-transpdf-body-trans-table-header mp-transpdf-body-trans-table-centeredHeader">Monthly Amortization</th>
+            <th class="mp-transpdf-body-trans-table-header mp-transpdf-body-trans-table-centeredHeader">Interest</th>
+            <th class="mp-transpdf-body-trans-table-header mp-transpdf-body-trans-table-centeredHeader">Pricipal</th>
+            <th class="mp-transpdf-body-trans-table-header mp-transpdf-body-trans-table-centeredHeader">Principal Balance</th>
+          </tr>
+          <tr>
+            <td><div class="mp-transpdf-body-divider"></div></td>
+            <td><div class="mp-transpdf-body-divider"></div></td>
+            <td><div class="mp-transpdf-body-divider"></div></td>
+            <td><div class="mp-transpdf-body-divider"></div></td>
+            <td><div class="mp-transpdf-body-divider"></div></td>
+            <td><div class="mp-transpdf-body-divider"></div></td>
+            <td><div class="mp-transpdf-body-divider"></div></td>
+          </tr>
+          {% for loanTransaction in transactions %}
+            <tr>
+              <td class="mp-transpdf-body-trans-table-centered">{{ loanTransaction.getDate()|date('m/d/Y') }}</td>
+              <td class="mp-transpdf-body-trans-table-elevated">{{ loanTransaction.getReferenceNo() ~ ' - ' ~ loanTransaction.getDescription() }}</td>
+              <td class="mp-transpdf-body-trans-table-centered">{{ loanTransaction.loan.getAccount() }}</td>
+              <td class="mp-transpdf-body-trans-table-centered">{{ loanTransaction.type == 'GRANT' ? '' : loanTransaction.loan.getAmortization()|money }}</td>
+              <td class="mp-transpdf-body-trans-table-centered">{{ loanTransaction.type == 'GRANT' ? '' : loanTransaction.getInterest()|money }}</td>
+              <td class="mp-transpdf-body-trans-table-centered">{{ loanTransaction.getPrincipal()|money }}</td>
+              <td class="mp-transpdf-body-trans-table-centered">{{ loanTransaction.getInitialBalance()|money }}</td>
+            </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  </body>
+  {{ partial('partials/globalScripts') }}
+</html>
