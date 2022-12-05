@@ -49,6 +49,7 @@ Route::get('/generate/loans', 'MemberController@generateloans');
 
 //admin
 Route::get('/admin/dashboard', 'AdminController@index');
+Route::get('/admin/count', 'AdminController@getTotal');
 Route::get('/admin/member_soa/{id}', 'AdminController@member_soa');
 Route::get('/admin/members', 'AdminController@members');
 Route::get('/admin/onboarding', 'AdminController@onboarding');

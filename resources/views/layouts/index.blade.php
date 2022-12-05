@@ -28,13 +28,36 @@
 <script src="{{ asset('/dist/dashboard.js') }}"></script>
 <script src="{{ asset('/dist/select2-4.0.13/js/select2.min.js') }}"></script>
 
+<style>
+  #loading {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    display: block;
+    opacity: 0.7;
+    background-color: #fff;
+    z-index: 150;
+    text-align: center;
+    
+}
 
+#loading-image {
+    margin-top: 200px;
+}
+</style>
  
 
 
 
 </head>
 <body id="uppfi">
+    <div id="loading" class="mx-auto" style="display:none;">
+        <img id="loading-image" src="{{ asset('/dist/loading.gif') }}" alt="Loading..." />
+    </div>
+
+
    @section('content')
    @show
    @yield('scripts')
