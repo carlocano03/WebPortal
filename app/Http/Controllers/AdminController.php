@@ -236,12 +236,7 @@ public function getTotal()
 
 public function getTotal_campuses()
 {
-    
-    // $upcontri=DB::table('contribution_transaction')
-    // ->where('account_id', '1') 
-    // ->sum('amount');
     DB::enableQueryLog();
-    
     if(isset($_GET['campuses_id']) && $_GET['campuses_id'] != "")
   {
     $upcontri=DB::table('contribution_transaction')->select('amount')
@@ -258,9 +253,6 @@ public function getTotal_campuses()
     ->where('account_id', '1') 
     ->sum('amount');
  }
-    // $membercontri=DB::table('contribution_transaction')
-    // ->where('account_id', '2')
-    // ->sum('amount');
     if(isset($_GET['campuses_id']) && $_GET['campuses_id'] != "")
     {
     $membercontri=DB::table('contribution_transaction')->select('amount')
@@ -278,9 +270,7 @@ public function getTotal_campuses()
     ->where('account_id', '2')
     ->sum('amount');
     }
-    // $earningsUP=DB::table('contribution_transaction')
-    // ->where('account_id', '3')
-    // ->sum('amount');
+
     if(isset($_GET['campuses_id']) && $_GET['campuses_id'] != "")
     {
     $earningsUP=DB::table('contribution_transaction')->select('amount')
@@ -298,9 +288,7 @@ public function getTotal_campuses()
     ->where('account_id', '3')
     ->sum('amount');
     }
-    // $earningsMember=DB::table('contribution_transaction')
-    // ->where('account_id', '4')
-    // ->sum('amount');
+
     if(isset($_GET['campuses_id']) && $_GET['campuses_id'] != "")
     {
     $earningsMember=DB::table('contribution_transaction')->select('amount')
@@ -329,9 +317,6 @@ public function getTotal_campuses()
       ->count();
     }
 
-  // $totalloansgranted=LoanTransaction::leftjoin('loan','loan_transaction.loan_id','loan.id')
-  //     ->leftjoin('member','loan.member_id','member.id')
-  //     ->sum('amount');
   if(isset($_GET['campuses_id']) && $_GET['campuses_id'] != "")
     {
    $totalloansgranted=LoanTransaction::leftjoin('loan','loan_transaction.loan_id','loan.id')
@@ -354,7 +339,7 @@ public function getTotal_campuses()
       'earningsUP' => number_format($earningsUP,2),
       'earningsMember' => number_format($earningsMember,2),
       'totalMember' => number_format($memberscount),
-      'dd' => $_GET['campuses_id'],
+      'dd' => $query,
       'totalloansgranted' => number_format($totalloansgranted),
     );
 
