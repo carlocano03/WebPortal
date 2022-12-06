@@ -241,6 +241,9 @@ public function getTotal_campuses()
     // ->where('account_id', '1') 
     // ->sum('amount');
     DB::enableQueryLog();
+    
+    if(isset($_GET['campuses_id']) && $_GET['campuses_id'] != "")
+  {
     $upcontri=DB::table('contribution_transaction')->select('amount')
     ->join('contribution','contribution_transaction.contribution_id','contribution.id')
     ->join('member','contribution.member_id','member.id')
@@ -249,10 +252,17 @@ public function getTotal_campuses()
     ->groupBy('member.campus_id')
     ->groupBy('contribution_transaction.account_id')
     ->sum('contribution_transaction.amount');
-
+ }else
+ {
+  $upcontri=DB::table('contribution_transaction')
+    ->where('account_id', '1') 
+    ->sum('amount');
+ }
     // $membercontri=DB::table('contribution_transaction')
     // ->where('account_id', '2')
     // ->sum('amount');
+    if(isset($_GET['campuses_id']) && $_GET['campuses_id'] != "")
+    {
     $membercontri=DB::table('contribution_transaction')->select('amount')
     ->join('contribution','contribution_transaction.contribution_id','contribution.id')
     ->join('member','contribution.member_id','member.id')
@@ -261,10 +271,18 @@ public function getTotal_campuses()
     ->groupBy('member.campus_id')
     ->groupBy('contribution_transaction.account_id')
     ->sum('contribution_transaction.amount');
-
+    }
+    else
+    {
+    $membercontri=DB::table('contribution_transaction')
+    ->where('account_id', '2')
+    ->sum('amount');
+    }
     // $earningsUP=DB::table('contribution_transaction')
     // ->where('account_id', '3')
     // ->sum('amount');
+    if(isset($_GET['campuses_id']) && $_GET['campuses_id'] != "")
+    {
     $earningsUP=DB::table('contribution_transaction')->select('amount')
     ->join('contribution','contribution_transaction.contribution_id','contribution.id')
     ->join('member','contribution.member_id','member.id')
@@ -273,10 +291,18 @@ public function getTotal_campuses()
     ->groupBy('member.campus_id')
     ->groupBy('contribution_transaction.account_id')
     ->sum('contribution_transaction.amount');
-
+    }
+    else
+    {
+    $earningsUP=DB::table('contribution_transaction')
+    ->where('account_id', '3')
+    ->sum('amount');
+    }
     // $earningsMember=DB::table('contribution_transaction')
     // ->where('account_id', '4')
     // ->sum('amount');
+    if(isset($_GET['campuses_id']) && $_GET['campuses_id'] != "")
+    {
     $earningsMember=DB::table('contribution_transaction')->select('amount')
     ->join('contribution','contribution_transaction.contribution_id','contribution.id')
     ->join('member','contribution.member_id','member.id')
@@ -285,30 +311,50 @@ public function getTotal_campuses()
     ->groupBy('member.campus_id')
     ->groupBy('contribution_transaction.account_id')
     ->sum('contribution_transaction.amount');
-
+    }
+    else
+    {
+    $earningsMember=DB::table('contribution_transaction')
+    ->where('account_id', '4')
+    ->sum('amount');
+    }
+    if(isset($_GET['campuses_id']) && $_GET['campuses_id'] != "")
+    {
   $memberscount=DB::table('member')
   ->where('member.campus_id',$_GET['campuses_id'])
   ->count();
+    }
+    else{
+      $memberscount=DB::table('member')
+      ->count();
+    }
 
   // $totalloansgranted=LoanTransaction::leftjoin('loan','loan_transaction.loan_id','loan.id')
   //     ->leftjoin('member','loan.member_id','member.id')
   //     ->sum('amount');
-  
+  if(isset($_GET['campuses_id']) && $_GET['campuses_id'] != "")
+    {
    $totalloansgranted=LoanTransaction::leftjoin('loan','loan_transaction.loan_id','loan.id')
       ->leftjoin('member','loan.member_id','member.id')
       ->where('member.campus_id',$_GET['campuses_id'])
       ->groupBy('member.campus_id')
       ->sum('amount');
-      $query = DB::getQueryLog();
-
-
+      
+    }
+    else
+    {
+       $totalloansgranted=LoanTransaction::leftjoin('loan','loan_transaction.loan_id','loan.id')
+      ->leftjoin('member','loan.member_id','member.id')
+      ->sum('amount');
+    }
+    $query = DB::getQueryLog();
     $data = array(
       'total' => number_format($upcontri,2),
       'membercontri' => number_format($membercontri,2),
       'earningsUP' => number_format($earningsUP,2),
       'earningsMember' => number_format($earningsMember,2),
       'totalMember' => number_format($memberscount),
-      'dd' => $query,
+      'dd' => $_GET['campuses_id'],
       'totalloansgranted' => number_format($totalloansgranted),
     );
 
