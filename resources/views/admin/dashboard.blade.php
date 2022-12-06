@@ -219,6 +219,9 @@ $('#campuses_select').on('change', function(e) {
             'campuses_id': campuses_id
         },
         dataType: "json",
+        beforeSend: function() {
+            $('#loading').show();
+        },
         success: function(response) {
             $('#upcontri').text(response.total);
             $('#membercontri').text(response.membercontri);

@@ -198,19 +198,19 @@ $data = array(
 //Eto na yung bago
 public function getTotal()
 {
-    $upcontri=DB::table('contribution_transaction')
+    $upcontri=DB::table('contribution_transaction')->select('amount')
     ->where('account_id', '1') 
     ->sum('amount');
 
-    $membercontri=DB::table('contribution_transaction')
+    $membercontri=DB::table('contribution_transaction')->select('amount')
     ->where('account_id', '2')
     ->sum('amount');
 
-    $earningsUP=DB::table('contribution_transaction')
+    $earningsUP=DB::table('contribution_transaction')->select('amount')
     ->where('account_id', '3')
     ->sum('amount');
 
-    $earningsMember=DB::table('contribution_transaction')
+    $earningsMember=DB::table('contribution_transaction')->select('amount')
     ->where('account_id', '4')
     ->sum('amount');
 
@@ -236,36 +236,70 @@ public function getTotal()
 
 public function getTotal_campuses()
 {
-    $upcontri=DB::table('contribution_transaction')
-    ->where('account_id', '1') 
-    ->sum('amount');
+    
+    // $upcontri=DB::table('contribution_transaction')
+    // ->where('account_id', '1') 
+    // ->sum('amount');
+    DB::enableQueryLog();
+    $upcontri=DB::table('contribution_transaction')->select('amount')
+    ->join('contribution','contribution_transaction.contribution_id','contribution.id')
+    ->join('member','contribution.member_id','member.id')
+    ->where('member.campus_id',$_GET['campuses_id'])
+    ->where('contribution_transaction.account_id', '1')
+    ->groupBy('member.campus_id')
+    ->groupBy('contribution_transaction.account_id')
+    ->sum('contribution_transaction.amount');
 
     // $membercontri=DB::table('contribution_transaction')
     // ->where('account_id', '2')
     // ->sum('amount');
+    $membercontri=DB::table('contribution_transaction')->select('amount')
+    ->join('contribution','contribution_transaction.contribution_id','contribution.id')
+    ->join('member','contribution.member_id','member.id')
+    ->where('member.campus_id',$_GET['campuses_id'])
+    ->where('contribution_transaction.account_id', '2')
+    ->groupBy('member.campus_id')
+    ->groupBy('contribution_transaction.account_id')
+    ->sum('contribution_transaction.amount');
 
-    $earningsUP=DB::table('contribution_transaction')
-    ->where('account_id', '3')
-    ->sum('amount');
+    // $earningsUP=DB::table('contribution_transaction')
+    // ->where('account_id', '3')
+    // ->sum('amount');
+    $earningsUP=DB::table('contribution_transaction')->select('amount')
+    ->join('contribution','contribution_transaction.contribution_id','contribution.id')
+    ->join('member','contribution.member_id','member.id')
+    ->where('member.campus_id',$_GET['campuses_id'])
+    ->where('contribution_transaction.account_id', '3')
+    ->groupBy('member.campus_id')
+    ->groupBy('contribution_transaction.account_id')
+    ->sum('contribution_transaction.amount');
 
-    $earningsMember=DB::table('contribution_transaction')
-    ->where('account_id', '4')
-    ->sum('amount');
+    // $earningsMember=DB::table('contribution_transaction')
+    // ->where('account_id', '4')
+    // ->sum('amount');
+    $earningsMember=DB::table('contribution_transaction')->select('amount')
+    ->join('contribution','contribution_transaction.contribution_id','contribution.id')
+    ->join('member','contribution.member_id','member.id')
+    ->where('member.campus_id',$_GET['campuses_id'])
+    ->where('contribution_transaction.account_id', '4')
+    ->groupBy('member.campus_id')
+    ->groupBy('contribution_transaction.account_id')
+    ->sum('contribution_transaction.amount');
 
-  $membercontri=DB::table('contribution_transaction')
-  ->join('contribution_account','contribution_transaction.account_id','contribution_account.id')
-  ->join('contribution','contribution_transaction.contribution_id','contribution.id')
-  ->join('member','contribution.member_id','member.id')
+  $memberscount=DB::table('member')
   ->where('member.campus_id',$_GET['campuses_id'])
-  ->groupBy('contribution_transaction.account_id')
-  ->sum('contribution_transaction.amount');
+  ->count();
 
-    $memberscount=count(Member::all());
-    
-    
-    $totalloansgranted=LoanTransaction::leftjoin('loan','loan_transaction.loan_id','loan.id')
-        ->leftjoin('member','loan.member_id','member.id')
-        ->sum('amount');
+  // $totalloansgranted=LoanTransaction::leftjoin('loan','loan_transaction.loan_id','loan.id')
+  //     ->leftjoin('member','loan.member_id','member.id')
+  //     ->sum('amount');
+  
+   $totalloansgranted=LoanTransaction::leftjoin('loan','loan_transaction.loan_id','loan.id')
+      ->leftjoin('member','loan.member_id','member.id')
+      ->where('member.campus_id',$_GET['campuses_id'])
+      ->groupBy('member.campus_id')
+      ->sum('amount');
+      $query = DB::getQueryLog();
 
 
     $data = array(
@@ -274,6 +308,7 @@ public function getTotal_campuses()
       'earningsUP' => number_format($earningsUP,2),
       'earningsMember' => number_format($earningsMember,2),
       'totalMember' => number_format($memberscount),
+      'dd' => $query,
       'totalloansgranted' => number_format($totalloansgranted),
     );
 
