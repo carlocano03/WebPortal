@@ -217,10 +217,15 @@ public function getTotal()
     $memberscount=count(Member::all());
     
     
-    $totalloansgranted=LoanTransaction::leftjoin('loan','loan_transaction.loan_id','loan.id')
-        ->leftjoin('member','loan.member_id','member.id')
-        ->sum('amount');
+    // $totalloansgranted=LoanTransaction::leftjoin('loan','loan_transaction.loan_id','loan.id')
+    //     ->leftjoin('member','loan.member_id','member.id')
+    //     ->sum('amount');
+    
+    $totalloansgranted=LoanTransaction::sum('amount');
+  
 
+    $totalequity=0;
+    $totalequity = $upcontri + $membercontri + $earningsUP + $earningsMember;
 
     $data = array(
       'total' => number_format($upcontri,2),
@@ -228,7 +233,10 @@ public function getTotal()
       'earningsUP' => number_format($earningsUP,2),
       'earningsMember' => number_format($earningsMember,2),
       'totalMember' => number_format($memberscount),
-      'totalloansgranted' => number_format($totalloansgranted),
+      'totalloansgranted' => $totalloansgranted >= 1000000 ? number_format(($totalloansgranted/1000000),2): number_format($totalloansgranted,2),
+      'outstandingLoans' => number_format($totalloansgranted,2),
+      'label' => $totalloansgranted >= 1000000 ? '(in million Pesos)' : '',
+      'totalequity' => number_format($totalequity),
     );
 
   echo json_encode($data);
