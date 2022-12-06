@@ -46,6 +46,7 @@
             <div class="col-md-6 col-lg-4">
                 <div class="mp-text-c-gray mp-text-fs-small mp-pt3">
                     Total Loans Granted
+                    <span id="label"></span>
                 </div>
                 <div class="row align-items-center mp-pb3">
                     <div class="col">
@@ -154,8 +155,8 @@
                     <div class="mp-text-c-gray mp-text-fs-small">
                         Total Members' Outstanding Loans
                     </div>
-                    <div class="mp-card__body mp-text-fs-xlarge">
-                        PHP 5000
+                    <div class="mp-card__body mp-text-fs-xlarge" id="outstandingLoans">
+                        
                     </div>
                     <div class="mp-text-right mp-dashboard__icon mp-dashboard__icon--2x">
                         @include('layouts.icons.i-loans')
@@ -167,8 +168,8 @@
                     <div class="mp-text-c-gray mp-text-fs-small">
                         Total Members' Equity
                     </div>
-                    <div class="mp-card__body mp-text-fs-xlarge">
-                        PHP 5000
+                    <div class="mp-card__body mp-text-fs-xlarge" id="totalequity">
+
                     </div>
                     <div class="mp-text-right mp-dashboard__icon mp-dashboard__icon--2x">
                         @include('layouts.icons.i-loans')
@@ -203,6 +204,9 @@ $(document).ready(function() {
                 $('#earningsMember').text(response.earningsMember);
                 $('#totalMember').text(response.totalMember);
                 $('#totalloansgranted').text(response.totalloansgranted);
+                $('#outstandingLoans').text(response.outstandingLoans);
+                $('#totalequity').text('PHP' + response.totalequity);
+                $('#label').text(response.label);
             },
             complete: function(response) {
                 $('#loading').hide();
